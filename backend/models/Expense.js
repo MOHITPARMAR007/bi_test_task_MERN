@@ -10,3 +10,4 @@ const ExpenseSchema = new Schema({
 });
 
 module.exports = mongoose.model('Expense', ExpenseSchema);
+9
