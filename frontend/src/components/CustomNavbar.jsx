@@ -3,6 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const CustomNavbar = () => {
   const { user, loginWithRedirect, logout, isAuthenticated } = useAuth0();
+  console.log(user);
+  
 
   return (
     <div className='flex justify-between p-4'>  
