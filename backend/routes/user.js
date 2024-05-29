@@ -21,9 +21,9 @@ router.post('/register', async (req, res) => {
 // Create Group
 router.post('/group', async (req, res) => {
   try {
-    const { name, memberEmails } = req.body;
-    const group = await new Group({ name });    
-    console.log(req.body);
+    const { name, memberEmails,foodExpense,travelExpense, entertainmentExpense,otherExpense } = req.body;;
+    const group = await new Group({ name,memberEmails,foodExpense,travelExpense, entertainmentExpense,otherExpense });    
+    console.log(group);
     
     // const members = await User.find({ email:memberEmails  });
     // const members = memberEmails.split(',');
@@ -31,7 +31,7 @@ router.post('/group', async (req, res) => {
     // group.members.push(...members.map(member => member._id));
     
     const createdGp = await group.save(); 
-    console.log(createdGp.id);
+    // console.log(createdGp);
     res.status(201).send('Group created');
 
     // Send invitation emails
@@ -49,8 +49,8 @@ router.post('/group', async (req, res) => {
         to: member,
         subject: 'Group Invitation',
         html: `<h2>$thanks for registration</h2>
-                    <h4>Plz click on link to join group</h4>
-                    <a href="http://localhost:5000/api/users/joinGroup?email=${member}">Join Group</a>`,
+                    <h4>You are joined to ${name} group</h4>
+                    `,
 
       };
       console.log(memberEmails[0]);
@@ -67,12 +67,35 @@ router.post('/group', async (req, res) => {
   }
 });
 
-router.post('/joinGroup',(req,re)=>{
+router.get('/dashboard',async(req,res)=>{
   try {
-    console.log(req.query.email);
+    const groups = await Group.find();
+    console.log(groups);
+    res.status(200).json({data:groups})
   } catch (error) {
     
   }
 })
+
+// router.post('/:id/joinGroup',async(req,res)=>{
+//   try {
+//     console.log(req.query.email,req.params);
+//     const email = req.query.email
+//     const userId = req.params.id
+//     const group = await Group.findOne({_id:userId});
+
+//     if(group.members.includes(email))
+//       res.status(400).json({msg:"You already joined the group"})
+//     else{
+//       group.members.push(email)
+//       await group.save();
+//     }
+//     console.log(group);
+//     res.status(200).json({data:group});
+//   } catch (error) {
+//     console.log("jhj");
+//     res.status(500).json({msg:error.message})
+//   } 
+// })
 
 module.exports = router;
