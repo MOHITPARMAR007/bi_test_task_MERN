@@ -8,7 +8,10 @@ const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const cors=require("cors");
 const app = express();
-mongoose.connect('mongodb://127.0.0.1/expense_manager')
+const dotenv = require('dotenv');
+dotenv.config();
+const dbUrl= process.env.dbUrl
+mongoose.connect(dbUrl)
     .then(() => {
         console.log('Connected to MongoDB successfully');
         // Add your code to execute after successful connection here
@@ -27,8 +30,8 @@ app.use(cors({
 passport.use(new OAuth2Strategy({
   authorizationURL: 'https://provider.com/oauth2/authorize',
   tokenURL: 'https://provider.com/oauth2/token',
-  clientID: '4CVsVxaWDTVEgEPY97bLlZfYYEunyqLe',
-  clientSecret: 'i052QG4ZNPC6hch7sYG4DRokLOCK5XKOEnGHPQBEPg2eKMB2L64eWNNgnywDHjPF',
+  clientID: process.env.clientID,
+  clientSecret: process.env.clientSecret,
   callbackURL: 'http://localhost:3000/auth/callback',
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -48,7 +51,7 @@ app.use((req, res, next) => {
     next();
 });
 app.options('*', cors());
-
-app.listen(5000, () => {
-  console.log('Server is running on port 5000');
+const port = process.env.PORT | 5000;
+app.listen(port, () => {
+  console.log(`server is running on ${port}`);
 });
